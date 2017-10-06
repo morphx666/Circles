@@ -15,8 +15,8 @@ Public Class CirclesCollection
     Private queRemoveCircles As List(Of Circle) = New List(Of Circle)
 
     ' http://billiards.colostate.edu/threads/physics.html
-    Private Const timeStep As Double = 0.001
-    Private Const friction As Double = 0.01
+    Private Const timeStep As Double = 0.0008
+    Private Const friction As Double = 0.001
     Private Const e As Double = 0.8   ' Coefficient of restitution
 
     Public Event CollisionPoint(vector As Vector)

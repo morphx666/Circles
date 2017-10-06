@@ -1,6 +1,6 @@
 Imports System.Threading
 
-Public Class frmMain
+Public Class FormMain
     Private circles As CirclesCollection = New CirclesCollection()
 
     Private speedsHistory As Dictionary(Of Integer, List(Of Double)) = New Dictionary(Of Integer, List(Of Double))
@@ -15,12 +15,12 @@ Public Class frmMain
     Private refreshThread As Thread
     Private cancelThread As Boolean
 
-    Private Sub frmMain_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+    Private Sub FormMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         cancelThread = True
-        Circles.Dispose()
+        circles.Dispose()
     End Sub
 
-    Private Sub frmMain_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub FormMain_Load(sender As System.Object, e As EventArgs) Handles MyBase.Load
         Me.SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
         Me.SetStyle(ControlStyles.UserPaint, True)
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
@@ -34,14 +34,14 @@ Public Class frmMain
     End Sub
 
     Private Sub Reset()
-        Circles.PauseSimulation()
+        circles.PauseSimulation()
 
-        Circles.Clear()
-        Circles.ClientArea = Me.DisplayRectangle
+        circles.Clear()
+        circles.ClientArea = Me.DisplayRectangle
         speedsHistory.Clear()
         maxSpeed.Clear()
 
-        gbOptions.Visible = True
+        GroupBoxOptions.Visible = True
     End Sub
 
     Private Sub SetupAsNewtonsCradle()
@@ -50,27 +50,27 @@ Public Class frmMain
         Dim n As Integer = 5
         Dim p As PointF = New PointF(CSng(Width / 2 - 2 * size.Width - size.Width / 2), Height \ 2)
         For i As Integer = 1 To 5
-            Circles.AddWithNumber(New Circle(Color.FromArgb(255, CInt(127 + 128 * Rnd()), CInt(127 + 128 * Rnd()), CInt(127 + 128 * Rnd())), mass, p, 0, 0, size), i)
+            circles.AddWithNumber(New Circle(Color.FromArgb(255, CInt(127 + 128 * Rnd()), CInt(127 + 128 * Rnd()), CInt(127 + 128 * Rnd())), mass, p, 0, 0, size), i)
 
             p.X += (size.Width + 1)
         Next
 
         p.X += size.Width * 2
         Dim cueBall As Circle = New Circle(Color.White, mass, p, 0, 0, size)
-        Circles.Add(cueBall)
+        circles.Add(cueBall)
 
-        chkSimulatePockets.Checked = False
-        chkSimulatePockets.Enabled = False
+        CheckBoxSimulatePockets.Checked = False
+        CheckBoxSimulatePockets.Enabled = False
     End Sub
 
     Private Sub SetupAsPoolSimulation()
-        Dim mass As Double = 300
+        Dim mass As Double = 80
         Dim size As SizeF = New SizeF(30, 30)
         Dim n As Integer = 5
         Dim c As Integer = 1
         Dim p As PointF = New PointF(CSng(Width / 2 - 2 * size.Width - size.Width / 2), Height - 200)
         For i As Integer = 1 To 15
-            Circles.AddWithNumber(New Circle(Color.FromArgb(255, CInt(127 + 128 * Rnd()), CInt(127 + 128 * Rnd()), CInt(127 + 128 * Rnd())), mass, p, 0, 0, size), i)
+            circles.AddWithNumber(New Circle(Color.FromArgb(255, CInt(127 + 128 * Rnd()), CInt(127 + 128 * Rnd()), CInt(127 + 128 * Rnd())), mass, p, 0, 0, size), i)
 
             p.X += (size.Width + 1)
 
@@ -79,7 +79,7 @@ Public Class frmMain
                 c = 1
                 p.X = CSng(Width / 2 - (n - 1) * size.Width - (size.Width / 2) * (2 - n))
 
-                Dim v As Vector = New Vector(Circles(Circles.Count - 1).Velocity)
+                Dim v As Vector = New Vector(circles(circles.Count - 1).Velocity)
                 v.Angle = 300 - 60
                 v.Magnitude = size.Width
 
@@ -90,22 +90,22 @@ Public Class frmMain
         Next
 
         Dim cueBall As Circle = New Circle(Color.White, mass, New PointF(CSng(Width / 2), size.Width), 0, 0, size)
-        Circles.Add(cueBall)
+        circles.Add(cueBall)
 
-        chkSimulatePockets.Enabled = True
+        CheckBoxSimulatePockets.Enabled = True
     End Sub
 
     Private Sub CheckIfCircleIsInPocket(circle As Circle)
-        If chkSimulatePockets.Checked Then
+        If CheckBoxSimulatePockets.Checked Then
             Dim a As Double = circle.Diameter
-            If circle.X <= a AndAlso Circles.Bounds.Height - circle.Y <= a Then
-                Circles.QueRemove(circle)
-            ElseIf circle.X >= Circles.Bounds.Width - a AndAlso Circles.Bounds.Height - circle.Y <= a Then
-                Circles.QueRemove(circle)
+            If circle.X <= a AndAlso circles.Bounds.Height - circle.Y <= a Then
+                circles.QueRemove(circle)
+            ElseIf circle.X >= circles.Bounds.Width - a AndAlso circles.Bounds.Height - circle.Y <= a Then
+                circles.QueRemove(circle)
             ElseIf circle.X <= a AndAlso circle.Y <= a Then
-                Circles.QueRemove(circle)
-            ElseIf circle.X >= Circles.Bounds.Width - a AndAlso circle.Y <= a Then
-                Circles.QueRemove(circle)
+                circles.QueRemove(circle)
+            ElseIf circle.X >= circles.Bounds.Width - a AndAlso circle.Y <= a Then
+                circles.QueRemove(circle)
             End If
         End If
     End Sub
@@ -123,8 +123,8 @@ Public Class frmMain
         Loop
     End Sub
 
-    Private Sub frmMain_MouseDown(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles Me.MouseDown
-        selCircle = Circles.GetCircleAt(e.X, Me.ClientSize.Height - e.Y)
+    Private Sub FormMain_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
+        selCircle = circles.GetCircleAt(e.X, Me.ClientSize.Height - e.Y)
         If selCircle IsNot Nothing Then
             selCircle.Velocity.Magnitude = 0
             selCircle.SetAngularVelocity(selCircle.AngularVelocity, 1)
@@ -134,14 +134,14 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub frmMain_MouseMove(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles Me.MouseMove
+    Private Sub FormMain_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
         If isDragging Then
             dragVector.Destination = New PointF(e.X, Me.DisplayRectangle.Height - e.Y)
             'Me.Invalidate()
         End If
     End Sub
 
-    Private Sub frmMain_MouseUp(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles Me.MouseUp
+    Private Sub FormMain_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
         If isDragging Then
             If e.Button = Windows.Forms.MouseButtons.Left Then
                 selCircle.Velocity = dragVector * 10
@@ -154,13 +154,13 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub frmMain_Paint(sender As Object, e As System.Windows.Forms.PaintEventArgs) Handles Me.Paint
+    Private Sub FormMain_Paint(sender As Object, e As PaintEventArgs) Handles Me.Paint
         Dim g As Graphics = e.Graphics
 
         g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
         ' Draw Speed Graph for the balls
-        If chkSpeedGraphs.Checked AndAlso speedsHistory.Count > 1 Then
+        If CheckBoxSpeedGraphs.Checked AndAlso speedsHistory.Count > 1 Then
             Dim p As PointF
             Dim y As Integer
             Dim h As Integer = Me.DisplayRectangle.Height \ speedsHistory.Count
@@ -216,22 +216,22 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub btnReset_Click(sender As System.Object, e As System.EventArgs) Handles btnReset.Click
+    Private Sub ButtonReset_Click(sender As System.Object, e As EventArgs) Handles ButtonReset.Click
         Reset()
     End Sub
 
-    Private Sub frmMain_Resize(sender As Object, e As System.EventArgs) Handles Me.Resize
-        If Circles IsNot Nothing Then Circles.Bounds = Me.DisplayRectangle
+    Private Sub FormMain_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+        If circles IsNot Nothing Then circles.Bounds = Me.DisplayRectangle
     End Sub
 
-    Private Sub btnRun_Click(sender As System.Object, e As System.EventArgs) Handles btnRun.Click
-        gbOptions.Visible = False
+    Private Sub ButtonRun_Click(sender As System.Object, e As EventArgs) Handles ButtonRun.Click
+        GroupBoxOptions.Visible = False
 
-        If rbPoolSimulation.Checked Then SetupAsPoolSimulation()
-        If rbNewtonsCradle.Checked Then SetupAsNewtonsCradle()
+        If RadioButtonPoolSimulation.Checked Then SetupAsPoolSimulation()
+        If RadioButtonNewtonsCradle.Checked Then SetupAsNewtonsCradle()
 
-        Circles.RunSimulation()
-        AddHandler Circles.CollisionPoint, AddressOf CollisionPoint
-        AddHandler Circles.CirclePositionChanged, AddressOf CheckIfCircleIsInPocket
+        circles.RunSimulation()
+        AddHandler circles.CollisionPoint, AddressOf CollisionPoint
+        AddHandler circles.CirclePositionChanged, AddressOf CheckIfCircleIsInPocket
     End Sub
 End Class
