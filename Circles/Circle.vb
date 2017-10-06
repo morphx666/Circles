@@ -225,10 +225,10 @@ Public Class Circle
         Dim r As New RectangleF(X - Radius, area.Height - Y - Radius, Width, Height)
         'g.FillEllipse(mColor, p.X, p.Y, Width, Height)
 
-        Dim path As Drawing2D.GraphicsPath = New Drawing2D.GraphicsPath()
+        Dim path As GraphicsPath = New GraphicsPath()
         path.AddEllipse(r)
-        Dim pathBrush As Drawing2D.PathGradientBrush = New Drawing2D.PathGradientBrush(path)
-        pathBrush.CenterColor = Drawing.Color.White
+        Dim pathBrush As PathGradientBrush = New PathGradientBrush(path)
+        pathBrush.CenterColor = Color.White
         pathBrush.SurroundColors = New Color() {mColor.Color}
         pathBrush.CenterPoint = New PointF(r.X + r.Width, r.Y)
         pathBrush.SetSigmaBellShape(1)
@@ -244,7 +244,7 @@ Public Class Circle
         If drawVector Then
             Dim m As Vector = Momentum / 1000
 
-            m.Paint(g, area, Drawing.Color.White)
+            m.Paint(g, area, Color.White)
 
             Dim s As String = Math.Round(m.Magnitude, 1) & " @ " & Math.Round(m.Angle, 1)
             g.DrawString(s,

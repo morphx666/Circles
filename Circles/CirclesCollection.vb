@@ -1,4 +1,4 @@
-' Most of this code was implemnted from the excellent information found at http://www.myphysicslab.com/collision.html
+' Most of this code was implemented from the excellent information found at http://www.myphysicslab.com/collision.html
 
 Imports System.Threading
 
@@ -15,8 +15,8 @@ Public Class CirclesCollection
     Private queRemoveCircles As List(Of Circle) = New List(Of Circle)
 
     ' http://billiards.colostate.edu/threads/physics.html
-    Private Const timeStep As Double = 0.001
-    Private Const friction As Double = 0.01
+    Private Const timeStep As Double = 0.0008
+    Private Const friction As Double = 0.001
     Private Const e As Double = 0.8   ' Coefficient of restitution
 
     Public Event CollisionPoint(vector As Vector)
@@ -325,7 +325,7 @@ Public Class CirclesCollection
         End Get
     End Property
 
-    Public Sub Add(item As Circle) Implements System.Collections.Generic.ICollection(Of Circle).Add
+    Public Sub Add(item As Circle) Implements ICollection(Of Circle).Add
         AddHandler item.PositionChanged, Sub(sender As Circle)
                                              RaiseEvent CirclePositionChanged(sender)
                                          End Sub
@@ -343,11 +343,11 @@ Public Class CirclesCollection
         mCircles(mCircles.Count - 1).Number = Number
     End Sub
 
-    Public Sub Clear() Implements System.Collections.Generic.ICollection(Of Circle).Clear
+    Public Sub Clear() Implements ICollection(Of Circle).Clear
         mCircles.Clear()
     End Sub
 
-    Public Function Contains(item As Circle) As Boolean Implements System.Collections.Generic.ICollection(Of Circle).Contains
+    Public Function Contains(item As Circle) As Boolean Implements ICollection(Of Circle).Contains
         For Each c As Circle In mCircles
             If c = item Then Return True
         Next
@@ -355,23 +355,23 @@ Public Class CirclesCollection
         Return False
     End Function
 
-    Public Sub CopyTo(array() As Circle, arrayIndex As Integer) Implements System.Collections.Generic.ICollection(Of Circle).CopyTo
+    Public Sub CopyTo(array() As Circle, arrayIndex As Integer) Implements ICollection(Of Circle).CopyTo
         mCircles.CopyTo(array, arrayIndex)
     End Sub
 
-    Public ReadOnly Property Count() As Integer Implements System.Collections.Generic.ICollection(Of Circle).Count
+    Public ReadOnly Property Count() As Integer Implements ICollection(Of Circle).Count
         Get
             Return mCircles.Count
         End Get
     End Property
 
-    Public ReadOnly Property IsReadOnly() As Boolean Implements System.Collections.Generic.ICollection(Of Circle).IsReadOnly
+    Public ReadOnly Property IsReadOnly() As Boolean Implements ICollection(Of Circle).IsReadOnly
         Get
             Return mCircles.IsReadOnly
         End Get
     End Property
 
-    Public Function Remove(item As Circle) As Boolean Implements System.Collections.Generic.ICollection(Of Circle).Remove
+    Public Function Remove(item As Circle) As Boolean Implements ICollection(Of Circle).Remove
         mCircles.Remove(item)
     End Function
 
@@ -379,19 +379,19 @@ Public Class CirclesCollection
         queRemoveCircles.Add(item)
     End Sub
 
-    Public Function GetEnumerator() As System.Collections.Generic.IEnumerator(Of Circle) Implements System.Collections.Generic.IEnumerable(Of Circle).GetEnumerator
+    Public Function GetEnumerator() As IEnumerator(Of Circle) Implements IEnumerable(Of Circle).GetEnumerator
         Return mCircles.GetEnumerator
     End Function
 
-    Public Function IndexOf(item As Circle) As Integer Implements System.Collections.Generic.IList(Of Circle).IndexOf
+    Public Function IndexOf(item As Circle) As Integer Implements IList(Of Circle).IndexOf
         Return mCircles.IndexOf(item)
     End Function
 
-    Public Sub Insert(index As Integer, item As Circle) Implements System.Collections.Generic.IList(Of Circle).Insert
+    Public Sub Insert(index As Integer, item As Circle) Implements IList(Of Circle).Insert
         mCircles.Insert(index, item)
     End Sub
 
-    Default Public Property Item(index As Integer) As Circle Implements System.Collections.Generic.IList(Of Circle).Item
+    Default Public Property Item(index As Integer) As Circle Implements IList(Of Circle).Item
         Get
             Return mCircles.Item(index)
         End Get
@@ -400,11 +400,11 @@ Public Class CirclesCollection
         End Set
     End Property
 
-    Public Sub RemoveAt(index As Integer) Implements System.Collections.Generic.IList(Of Circle).RemoveAt
+    Public Sub RemoveAt(index As Integer) Implements IList(Of Circle).RemoveAt
         mCircles.RemoveAt(index)
     End Sub
 
-    Public Function GetEnumerator1() As System.Collections.IEnumerator Implements System.Collections.IEnumerable.GetEnumerator
+    Public Function GetEnumerator1() As IEnumerator Implements IEnumerable.GetEnumerator
         Return mCircles.GetEnumerator
     End Function
 
@@ -433,5 +433,4 @@ Public Class CirclesCollection
         GC.SuppressFinalize(Me)
     End Sub
 #End Region
-
 End Class
