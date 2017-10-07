@@ -136,7 +136,9 @@ Partial Class FormMain
         Me.Controls.Add(Me.CheckBoxSimulatePockets)
         Me.Controls.Add(Me.CheckBoxSpeedGraphs)
         Me.Controls.Add(Me.ButtonReset)
+        Me.KeyPreview = True
         Me.Name = "FormMain"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Newton's Conservation of Momentum"
         Me.GroupBoxOptions.ResumeLayout(False)
         Me.GroupBoxOptions.PerformLayout()

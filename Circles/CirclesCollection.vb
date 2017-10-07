@@ -91,13 +91,11 @@ Public Class CirclesCollection
 
         Dim tStart As Date
         Dim execTime As Integer
-
+        Dim ts As Integer = timeStep * 1000
 
         Do While simulationThread.ThreadState = ThreadState.Running AndAlso Me.disposedValue = False
             Try
-                If execTime <= (timeStep * 1000) Then
-                    Thread.Sleep(CInt(timeStep * 1000 - execTime))
-                End If
+                If execTime < ts Then Thread.Sleep(CInt(ts - execTime))
 
                 tStart = Now
                 For Each c1 As Circle In mCircles
@@ -161,7 +159,8 @@ Public Class CirclesCollection
                     For Each c As Circle In cc
                         ' Newton's law of motion: conservation of linear momentum (http://en.wikipedia.org/wiki/Conservation_of_momentum#Conservation_of_linear_momentum)
                         c.SetVelocity(New Vector(collisionResult.Circle2FinalVelocity.Magnitude * c.Mass / cx.Mass, collisionResult.Circle2FinalVelocity.Angle, c.Location), eleapsedTime)
-                        c.SetAngularVelocity(collisionResult.Circle2FinalAngularVelocity * c.Mass / cx.Mass, eleapsedTime)
+                        ' This doesn't work; removing it "makes the simulation more stable"
+                        'c.SetAngularVelocity(collisionResult.Circle2FinalAngularVelocity * c.Mass / cx.Mass, eleapsedTime)
                         c.Move(eleapsedTime)
                     Next
                 End If

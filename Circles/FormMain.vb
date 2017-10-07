@@ -12,6 +12,8 @@ Public Class FormMain
     Private colVector As Vector
     Private colVectorAlpha As Integer = 0
 
+    Private isShiftDown As Boolean
+
     Private refreshThread As Thread
     Private cancelThread As Boolean
 
@@ -89,7 +91,7 @@ Public Class FormMain
             End If
         Next
 
-        Dim cueBall As Circle = New Circle(Color.White, mass, New PointF(CSng(Width / 2), size.Width), 0, 0, size)
+        Dim cueBall As Circle = New Circle(Color.White, mass, New PointF(CSng(Width / 2 - circles.First().Width / 2), size.Width), 0, 0, size)
         circles.Add(cueBall)
 
         CheckBoxSimulatePockets.Enabled = True
@@ -137,6 +139,7 @@ Public Class FormMain
     Private Sub FormMain_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
         If isDragging Then
             dragVector.Destination = New PointF(e.X, Me.DisplayRectangle.Height - e.Y)
+            If isShiftDown Then dragVector.Angle -= dragVector.Angle Mod 45
             'Me.Invalidate()
         End If
     End Sub
@@ -144,7 +147,7 @@ Public Class FormMain
     Private Sub FormMain_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
         If isDragging Then
             If e.Button = Windows.Forms.MouseButtons.Left Then
-                selCircle.Velocity = dragVector * 10
+                selCircle.Velocity = dragVector * 25
             Else
                 selCircle.X = e.X
                 selCircle.Y = Me.ClientSize.Height - e.Y
@@ -233,5 +236,13 @@ Public Class FormMain
         circles.RunSimulation()
         AddHandler circles.CollisionPoint, AddressOf CollisionPoint
         AddHandler circles.CirclePositionChanged, AddressOf CheckIfCircleIsInPocket
+    End Sub
+
+    Private Sub FormMain_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        isShiftDown = e.Shift
+    End Sub
+
+    Private Sub FormMain_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
+        isShiftDown = e.Shift
     End Sub
 End Class
