@@ -64,7 +64,7 @@ Public Class FormMain
     End Sub
 
     Private Sub SetupAsPoolSimulation()
-        Dim mass As Double = 80
+        Dim mass As Double = 300
         Dim size As SizeF = New SizeF(30, 30)
         Dim n As Integer = 5
         Dim c As Integer = 1
@@ -159,7 +159,7 @@ Public Class FormMain
 
         g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
-        ' Draw Speed Graph for the balls
+        ' Draw Speed Graph for the circles
         If CheckBoxSpeedGraphs.Checked AndAlso speedsHistory.Count > 1 Then
             Dim p As PointF
             Dim y As Integer
@@ -171,7 +171,7 @@ Public Class FormMain
 
                     maxSpeed.Item(circleSpeeds.Key) = Math.Max(circleSpeeds.Value.Max(), maxSpeed.Item(circleSpeeds.Key))
                     Using gPen As New Pen(circles.Item(circleSpeeds.Key).Color)
-                        p = New Point(0, 0)
+                        p = New PointF(0, 0)
                         y = circleSpeeds.Key * h + h
                         For Each speed As Double In circleSpeeds.Value
                             p = New PointF(p.X, CSng(y - (speed / maxSpeed.Item(circleSpeeds.Key)) * h))
@@ -196,7 +196,7 @@ Public Class FormMain
             Try
                 c.Paint(g, Me.DisplayRectangle, False)
             Catch ex As Exception
-                ' Ignore when trying to paing outside a "paintable" region
+                ' Ignore when trying to paint outside a valid region
             End Try
             If isDragging AndAlso c = selCircle Then
                 g.DrawEllipse(Pens.Red, c.X - c.Radius, rh - c.Y - c.Radius, c.Width, c.Height)
